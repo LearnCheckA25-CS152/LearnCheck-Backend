@@ -1,14 +1,17 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import router from './router/materialRoutes.js';
+import materialRouter from './router/materialRoutes.js';
+import userRouter from './router/userRoutes.js';
 
 dotenv.config();
-
 const app = express();
 app.use(express.json());
-app.use(router);
 
-app.use('/api', router);
+app.use(materialRouter);
+app.use(userRouter);
+
+app.use('/api', materialRouter);
+app.use('/api', userRouter);
 
 const PORT = process.env.PORT;
 
