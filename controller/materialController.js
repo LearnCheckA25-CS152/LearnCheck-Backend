@@ -5,12 +5,15 @@ export const getMaterialById = async (req, res) => {
 
     try {
         const baseUrl = process.env.MOCK_API_BASE_URL;
-        const response = await axios.get(`${baseUrl}api/tutorials/${tutorialId}`);
-      
+        const response = await axios.get(`${baseUrl}/api/tutorials/${tutorialId}`);
+
+        const content = response.data?.data?.content || '';
+        const title = response.data?.data?.title || `Material id ${tutorialId}`;
+        
         const materialData = {
             id: tutorialId,
-            title: response.title || `Material id ${tutorialId}`, 
-            content: response.data,
+            title,
+            content,
         };
 
         res.status(200).json({
