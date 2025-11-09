@@ -5,29 +5,12 @@ export const getMaterialById = async (req, res) => {
 
     try {
         const baseUrl = process.env.MOCK_API_BASE_URL;
-        const response = await axios.get(`${baseUrl}/tutorials/${tutorialId}`);
-        const htmlString = response.data;
-
-        //use regex to find all <title> tags in the HTML.
-        const titleMatch = htmlString.match(/<title>([^<]+)<\/title>/g);
-        let title = `Material id ${tutorialId}`; //fallback title in case extraction fails
-
-        if (titleMatch && titleMatch.length > 0) {
-            //select the last match in the array
-            const fullTitle = titleMatch[titleMatch.length - 1]
-                                .replace('<title>', '')
-                                .replace('</title>', '')
-                                .trim();
-            
-            //split and take the first part to remove course (example, " -Belajar Dasar AI")
-            title = fullTitle.split(' - ')[0]; 
-        }
-
+        const response = await axios.get(`${baseUrl}api/tutorials/${tutorialId}`);
+      
         const materialData = {
             id: tutorialId,
-            title: title,
-            content: htmlString,
-            source: 'Mock API Dicoding'
+            title: response.title || `Material id ${tutorialId}`, 
+            content: response.data,
         };
 
         res.status(200).json({
