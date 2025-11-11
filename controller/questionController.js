@@ -11,10 +11,10 @@ export const generateQuestion = async (req, res, next) => {
       return res.status(404).json({ message: "Material not found!" });
 
     const text = htmlToText(mat.content);
-    const retriever = await buildRetriever(mat.id, text, embeddings);
-    const docs = await retriever.invoke(`Judul: ${mat.title}`);
+    // const retriever = await buildRetriever(mat.id, text, embeddings);
+    // const docs = await retriever.invoke(`Judul: ${mat.title}`);
 
-    const context = docs.map((d, i) => `#${i + 1} ${d.pageContent}`).join("\n");
+    // const context = docs.map((d, i) => `#${i + 1} ${d.pageContent}`).join("\n");
 
     // Prompt LLM
     const system = `Kamu adalah seorang ahli dalam membuat soal pilihan ganda (MCQ) kontekstual dalam Bahasa Indonesia.

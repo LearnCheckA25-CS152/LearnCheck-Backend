@@ -1,9 +1,8 @@
 import NodeCache from "node-cache";
 import {load as loadHtml} from "cheerio";
 
-import { Document } from "@langchain/core/documents";
-import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
-
+// import { Document } from "@langchain/core/documents";
+// import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
 // Cache for vector stores to avoid rebuilding
 
 const vsCache = new NodeCache({stdTTL: 3600});
