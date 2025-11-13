@@ -1,6 +1,6 @@
 import { _fetchMaterialById } from "./materialController.js";
 import { llm, embeddings } from "../services/llmService.js";
-import { htmlToText, buildRetriever } from "../services/ragStore.js";
+import { htmlToText} from "../services/ragStore.js";
 
 export const generateQuestion = async (req, res, next) => {
   try {
@@ -15,6 +15,7 @@ export const generateQuestion = async (req, res, next) => {
     // RAG function -> Butuh LLM berbayar
     // const retriever = await buildRetriever(mat.id, text, embeddings);
     // const docs = await retriever.invoke(`Judul: ${mat.title}`);
+
     // const context = docs.map((d, i) => `#${i + 1} ${d.pageContent}`).join("\n");
 
     // Prompt LLM
