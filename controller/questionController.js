@@ -1,6 +1,6 @@
-import { _fetchMaterialById } from "./materialController.js";
-import { llm, embeddings } from "../services/llmService.js";
-import { htmlToText} from "../services/ragStore.js";
+import {_fetchMaterialById} from "./materialController.js";
+import {llm, embeddings} from "../services/llmService.js";
+import {htmlToText} from "../services/ragStore.js";
 
 export const generateQuestion = async (req, res, next) => {
   try {
