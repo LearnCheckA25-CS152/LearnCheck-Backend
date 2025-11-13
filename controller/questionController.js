@@ -11,9 +11,10 @@ export const generateQuestion = async (req, res, next) => {
       return res.status(404).json({ message: "Material not found!" });
 
     const text = htmlToText(mat.content);
+
+    // RAG function -> Butuh LLM berbayar
     // const retriever = await buildRetriever(mat.id, text, embeddings);
     // const docs = await retriever.invoke(`Judul: ${mat.title}`);
-
     // const context = docs.map((d, i) => `#${i + 1} ${d.pageContent}`).join("\n");
 
     // Prompt LLM
@@ -70,10 +71,10 @@ Jangan memulai pertanyaan, jawaban, atau penjelasan dengan frasa seperti: "Teks 
 
 Instruksi akhir:
 **Output-kan hanya JSON valid seperti di atas, tanpa Markdown, tanpa kata pengantar, tanpa \`\`\`json.**`;
-    const matTitle = mat.title || "";
 
-    const user = `Judul: ${matTitle}\nMaterials:\n${text}`;
+    const user = `Materials:\n${text}`;
 
+    // Get response
     const resp = await llm.invoke([
       { role: "system", content: system },
       { role: "user", content: user },
@@ -104,7 +105,6 @@ Instruksi akhir:
       });
     }
 
-    // Parse JSON
     let payload = null;
     try {
       payload = JSON.parse(jsonString);

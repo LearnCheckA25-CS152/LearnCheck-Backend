@@ -13,16 +13,17 @@ export function htmlToText(html) {
   return $('body').text().replace(/\s+/g, ' ').trim();
 }
 
-export async function buildRetriever(materialId, contentText, embeddings) {
-  const key = `vs:${materialId}`;
-  let store = vsCache.get(key);
-  if (!store) {
-    const chunks = contentText.match(/.{1,900}(\s|$)/g) || [contentText];
-    const docs = chunks.map((t, i) =>
-      new Document({ pageContent: t, metadata: { materialId, chunk: i } })
-    );
-    store = await MemoryVectorStore.fromDocuments(docs, embeddings);
-    vsCache.set(key, store);
-  }
-  return store.asRetriever(4);
-}
+
+// export async function buildRetriever(materialId, contentText, embeddings) {
+//   const key = `vs:${materialId}`;
+//   let store = vsCache.get(key);
+//   if (!store) {
+//     const chunks = contentText.match(/.{1,900}(\s|$)/g) || [contentText];
+//     const docs = chunks.map((t, i) =>
+//       new Document({ pageContent: t, metadata: { materialId, chunk: i } })
+//     );
+//     store = await MemoryVectorStore.fromDocuments(docs, embeddings);
+//     vsCache.set(key, store);
+//   }
+//   return store.asRetriever(4);
+// }
