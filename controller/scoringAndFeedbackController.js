@@ -24,7 +24,6 @@ export const storeQuestions = (quizId, questions, materialId) => {
   });
 };
 
-//validasi jawaban menggunakan AI
 export const validateAnswers = async (req, res, next) => {
   try {
     const { quizId, answers, finishedAt } = req.body;
@@ -61,28 +60,73 @@ export const validateAnswers = async (req, res, next) => {
   }
 };
 
+const validateAnswerWithAI = async (question, studentAnswer, correctAnswer, materialText) => {
+  const systemPrompt = `Anda adalah asisten penilai edukasi. Tugas Anda:
+
+**MATERI**: ${materialText}
+
+**SOAL**: "${question}"
+**JAWABAN SISWA**: "${studentAnswer}"
+**KUNCI JAWABAN**: "${correctAnswer}"
+
+**TUGAS**: Tentukan apakah jawaban siswa BENAR atau SALAH berdasarkan materi.
+Perhatikan MAKNA dan ESENSI, bukan hanya kata-per-kata.
+
+**ATURAN**:
+- Jawaban sinonim yang benar = BENAR
+- Jawaban yang secara konsep sesuai = BENAR  
+- Jawaban yang salah atau misleading = SALAH
+
+**Output**: Hanya "BENAR" atau "SALAH"`;
+
+  try {
+    const response = await llm.invoke([
+      { role: "system", content: systemPrompt },
+      { role: "user", content: "Apakah jawaban siswa benar? Jawab hanya 'BENAR' atau 'SALAH':" }
+    ]);
+
+    const raw = response?.kwargs?.content || response?.content || response?.text || "";
+    const answer = raw.trim().toUpperCase();
+    
+    return answer.includes("BENAR");
+
+  } catch (error) {
+    console.error("AI Validation Error:", error);
+    // Fallback ke basic matching jika AI error
+    return studentAnswer.toString().trim().toLowerCase() === correctAnswer.toString().trim().toLowerCase();
+  }
+};
+
+
 //validasi jawaban 
 const validateStudentAnswers = async (studentAnswers, questions, materialText, quizId, finishedAt) => {
   let correctCount = 0;
   let unansweredCount = 0;
 
-  studentAnswers.forEach(studentAnswer => {
+  for (const studentAnswer of studentAnswers) {
     const questionId = studentAnswer.questionId;
     const studentAnswerText = studentAnswer.answer;
-    
+
     const question = questions.find(q => q.id == questionId);
     
-    if (!question) return;
+    if (!question) continue;
 
     if (studentAnswerText === null || studentAnswerText === undefined || studentAnswerText === "") {
       unansweredCount++;
-      return;
+      continue;
     }
-    if (studentAnswerText.toString().trim().toLowerCase() === 
-        question.correct_answer.toString().trim().toLowerCase()) {
+
+    const isCorrect = await validateAnswerWithAI(
+      question.question,
+      studentAnswerText,
+      question.correct_answer,
+      materialText
+    );
+
+    if (isCorrect) {
       correctCount++;
     }
-  });
+  }
 
   //menghitung stats
   const totalQuestions = questions.length;
