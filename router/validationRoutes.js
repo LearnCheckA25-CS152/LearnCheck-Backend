@@ -1,5 +1,5 @@
 import express from 'express';
-import { validateAnswers, getQuizData } from '../controller/scoringAndFeedbackController.js';
+import { validateAnswers, getQuizData } from '../controller/validationController.js';
 
 const validationRouter = express.Router();
 
