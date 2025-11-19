@@ -4,6 +4,6 @@ import { validateAnswers, getQuizData } from '../controller/validationController
 const validationRouter = express.Router();
 
 validationRouter.post('/quiz/validate', validateAnswers);
-validationRouter.get('/quiz/:quizId', getQuizData);
+// validationRouter.get('/quiz/:quizId', getQuizData);
 
 export default validationRouter;

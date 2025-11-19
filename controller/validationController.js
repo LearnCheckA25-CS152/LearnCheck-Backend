@@ -188,24 +188,24 @@ const generateFallbackFeedback = (score, correctCount, totalQuestions) => {
   }
 };
 
-export const getQuizData = (req, res, next) => {
-  try {
-    const { quizId } = req.params;
+// export const getQuizData = (req, res, next) => {
+//   try {
+//     const { quizId } = req.params;
     
-    const quizData = questionStore.get(quizId);
+//     const quizData = questionStore.get(quizId);
     
-    if (!quizData) {
-      return res.status(404).json({
-        message: "Quiz not found"
-      });
-    }
+//     if (!quizData) {
+//       return res.status(404).json({
+//         message: "Quiz not found"
+//       });
+//     }
 
-    return res.json({
-      quizId: quizId,
-      questions: quizData.questions,
-      createdAt: quizData.createdAt
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+//     return res.json({
+//       quizId: quizId,
+//       questions: quizData.questions,
+//       createdAt: quizData.createdAt
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
