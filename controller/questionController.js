@@ -1,7 +1,6 @@
 import {_fetchMaterialById} from "./materialController.js";
 import {llm, embeddings} from "../services/llmService.js";
 import {htmlToText} from "../services/ragStore.js";
-import { storeQuestions } from "./scoringAndFeedbackController.js";
 
 export const generateQuestion = async (req, res, next) => {
   try {
@@ -117,8 +116,6 @@ Instruksi akhir:
         raw,
       });
     }
-
-    storeQuestions(tutorialId, payload.questions, tutorialId);
 
     return res.json({
       questions: payload.questions,

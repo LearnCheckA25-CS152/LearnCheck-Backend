@@ -2,41 +2,11 @@ import { llm } from "../services/llmService.js";
 import { _fetchMaterialById } from "./materialController.js";
 import { htmlToText } from "../services/ragStore.js";
 
-// Temporary storage
-const questionStore = new Map();
-
-//fungsi untuk menyimpan soal yang sudah digenerate
-export const storeQuestions = (quizId, questions, materialId) => {
-  if (!quizId || !questions) {
-    throw new Error("QuizId and questions are required");
-  }
-
-  questionStore.set(quizId, {
-    questions: questions.map(q => ({
-      id: q.id,
-      question: q.question,
-      correct_answer: q.correct_answer,
-      explanation: q.explanation,
-      options: q.options
-    })),
-    materialId: materialId,
-    createdAt: new Date().toISOString()
-  });
-};
-
 export const validateAnswers = async (req, res, next) => {
   try {
-    const { quizId, answers, finishedAt } = req.body;
+    const { quizId, answers, questions, finishedAt } = req.body;
 
-    const quizData = questionStore.get(quizId);
-    
-    if (!quizData) {
-      return res.status(404).json({
-        message: "Quiz not found, make sure the questions have been generated"
-      });
-    }
-
-    const material = await _fetchMaterialById(quizData.materialId);
+    const material = await _fetchMaterialById(quizId);
     if (!material?.content) {
       return res.status(404).json({
         message: "Material not found"
@@ -47,7 +17,7 @@ export const validateAnswers = async (req, res, next) => {
 
     const validationResult = await validateStudentAnswers(
       answers, 
-      quizData.questions, 
+      questions, 
       materialText, 
       quizId, 
       finishedAt
