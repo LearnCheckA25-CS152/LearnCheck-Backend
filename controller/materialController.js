@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { load as loadHtml } from 'cheerio';
 
 export async function _fetchMaterialById(tutorialId) {
   const baseUrl = process.env.MOCK_API_BASE_URL;
@@ -9,7 +10,24 @@ export async function _fetchMaterialById(tutorialId) {
     });
 
     const content = response.data?.data?.content || '';
-    const title = response.data?.data?.title || `Material id ${tutorialId}`;
+
+    // extract title from h2
+    let title = '';
+    if (content) {
+      try {
+        const $ = loadHtml(content);
+        const h2 = $('h2').first().text().trim();
+        if (h2) title = h2;
+      } catch (err) {
+        const error = new Error(
+          'Error extracting title from HTML:',
+          err.message
+        );
+        error.status = 500;
+        throw error;
+      }
+    }
+    if (!title) title = `Material id ${tutorialId}`;
 
     return { id: tutorialId, title, content };
   } catch (err) {

@@ -118,6 +118,7 @@ Instruksi akhir:
     }
 
     return res.json({
+      title: mat.title,
       questions: payload.questions,
     });
   } catch (e) {
