@@ -187,25 +187,3 @@ const generateFallbackFeedback = (score, correctCount, totalQuestions) => {
     return `Perlu peningkatan. Dengan ${correctCount} jawaban benar dari ${totalQuestions} soal, disarankan untuk mempelajari ulang materi secara menyeluruh untuk memahami konsep dasar dengan lebih baik.`;
   }
 };
-
-// export const getQuizData = (req, res, next) => {
-//   try {
-//     const { quizId } = req.params;
-    
-//     const quizData = questionStore.get(quizId);
-    
-//     if (!quizData) {
-//       return res.status(404).json({
-//         message: "Quiz not found"
-//       });
-//     }
-
-//     return res.json({
-//       quizId: quizId,
-//       questions: quizData.questions,
-//       createdAt: quizData.createdAt
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
