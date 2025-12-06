@@ -198,95 +198,95 @@ const generateFallbackFeedback = (score, correctCount, totalQuestions) => {
   }
 };
 
-const resultStore = {};
+// const resultStore = {};
 
-export const storeResult = async (req, res) => {
-  try {
-    const { learningId, scoreStats, finishedAt } = req.body;
+// export const storeResult = async (req, res) => {
+//   try {
+//     const { learningId, scoreStats, finishedAt } = req.body;
 
-    if (!learningId || !scoreStats || typeof scoreStats.avarageScore !== 'number') {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Incomplete or invalid data input',
-      });
-    }
+//     if (!learningId || !scoreStats || typeof scoreStats.avarageScore !== 'number') {
+//       return res.status(400).json({
+//         status: 'fail',
+//         message: 'Incomplete or invalid data input',
+//       });
+//     }
 
-    const dataToStore = {
-      scoreStats,
-      finishedAt,
-      storedAt: new Date().toISOString(),
-    };
+//     const dataToStore = {
+//       scoreStats,
+//       finishedAt,
+//       storedAt: new Date().toISOString(),
+//     };
 
-    resultStore[learningId] = dataToStore;
+//     resultStore[learningId] = dataToStore;
 
-    return res.status(200).json({
-      status: 'success',
-      message: 'Final score successfully saved',
-      learningId: learningId,
-    });
-  } catch (error) {
-    return res.status.json({
-      status: 'error',
-      message: error.message,
-    });
-  }
-}
+//     return res.status(200).json({
+//       status: 'success',
+//       message: 'Final score successfully saved',
+//       learningId: learningId,
+//     });
+//   } catch (error) {
+//     return res.status.json({
+//       status: 'error',
+//       message: error.message,
+//     });
+//   }
+// }
 
-export const updateProgress = async (req, res) => {
-  try {
-    const { learningId, status, lastActivity } = req.body;
+// export const updateProgress = async (req, res) => {
+//   try {
+//     const { learningId, status, lastActivity } = req.body;
 
-    if (!learningId || !status) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Learning id and status are requried',
-      });
-    }
+//     if (!learningId || !status) {
+//       return res.status(400).json({
+//         status: 'fail',
+//         message: 'Learning id and status are requried',
+//       });
+//     }
 
-    const currentData = resultStore[learningId] || {};
-    currentData.status = status;
-    currentData.lastActivity = lastActivity || new Date().toISOString();
+//     const currentData = resultStore[learningId] || {};
+//     currentData.status = status;
+//     currentData.lastActivity = lastActivity || new Date().toISOString();
 
-    resultStore[learningId] = currentData;
+//     resultStore[learningId] = currentData;
 
-    return res.status(200).json({
-      status: 'success',
-      message: `Progress successfully updated to status: ${status}`,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: 'error',
-      message: error.message,
-    });
-  }
-}
+//     return res.status(200).json({
+//       status: 'success',
+//       message: `Progress successfully updated to status: ${status}`,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       status: 'error',
+//       message: error.message,
+//     });
+//   }
+// }
 
-export const getProgress = async (req, res) => {
-  try {
-    const { learningId } = req.params;
+// export const getProgress = async (req, res) => {
+//   try {
+//     const { learningId } = req.params;
 
-    const data = resultStore[learningId];
+//     const data = resultStore[learningId];
 
-    if (!data) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Progress not found',
-      });
-    }
+//     if (!data) {
+//       return res.status(404).json({
+//         status: 'fail',
+//         message: 'Progress not found',
+//       });
+//     }
 
-    return res.status(200).json({
-      status: 'success',
-      data: {
-        learningId: learningId,
-        scoreStats: data.scoreStats,
-        status: data.status,
-        lastActivity: data.lastActivity,
-      }
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: 'error',
-      message: error.message,
-    });
-  }
-}
+//     return res.status(200).json({
+//       status: 'success',
+//       data: {
+//         learningId: learningId,
+//         scoreStats: data.scoreStats,
+//         status: data.status,
+//         lastActivity: data.lastActivity,
+//       }
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       status: 'error',
+//       message: error.message,
+//     });
+//   }
+// }
