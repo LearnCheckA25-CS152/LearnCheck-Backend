@@ -1,24 +1,20 @@
 import {_fetchMaterialById} from "./materialController.js";
-import {llm, embeddings} from "../services/llmService.js";
+import {llm} from "../services/llmService.js";
 import {htmlToText} from "../services/ragStore.js";
 
 export const generateQuestion = async (req, res, next) => {
   try {
     const { tutorialId } = req.params;
 
+    // Fetch material
     const mat = await _fetchMaterialById(tutorialId);
     if (!mat?.content)
       return res.status(404).json({ message: "Material not found!" });
 
+    // Convert HTML to text
     const text = htmlToText(mat.content);
 
-    // RAG function -> Butuh LLM berbayar
-    // const retriever = await buildRetriever(mat.id, text, embeddings);
-    // const docs = await retriever.invoke(`Judul: ${mat.title}`);
-
-    // const context = docs.map((d, i) => `#${i + 1} ${d.pageContent}`).join("\n");
-
-    // Prompt LLM
+    // LLM prompt
     const system = `Kamu adalah seorang ahli dalam membuat soal pilihan ganda (MCQ) kontekstual dalam Bahasa Indonesia.
 
 Semua pertanyaan, pilihan jawaban, dan penjelasan HARUS didasarkan sepenuhnya pada informasi dari teks modul tersebut.  
@@ -117,6 +113,7 @@ Instruksi akhir:
       });
     }
 
+    // return response
     return res.json({
       title: mat.title,
       questions: payload.questions,
